@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Paper from "@material-ui/core/Paper";
 import { 
 	ViewState,
@@ -19,16 +20,33 @@ import {
 	AppointmentForm,
 	ConfirmationDialog
 } from "@devexpress/dx-react-scheduler-material-ui";
-import data from "./data";
+
+const HOST = "localhost";
+const PORT = 5000;
+const BASE_URL = `${HOST}:${PORT}/api/events`;
+
+const instance = axios.create({
+	baseURL: BASE_URL,
+	timeout: 2000,
+	headers: {"Content-Type": "application/json"}
+});
 
 export default function(props) {
 	const [state, setState] = useState({
-		data,
+		data: [],
 		currentViewName: "work-week"
 	});
+	console.log("state before request: ", state);
+	useEffect(function() {
+		instance.get("/")
+			.then(res => setState({...state, data: res.data}))
+			.catch(error => console.log(error));
+	});	
+	console.log("state after request: ", state);
 	function currentViewNameChange(currentViewName) {
 		setState({...state, currentViewName});
 	}
+	
 	function commitChanges({ added, changed, deleted }) {
 		setState(function(state) {
 			const {data} = state;
