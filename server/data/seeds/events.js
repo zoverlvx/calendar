@@ -6,21 +6,21 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex("events").insert([
 		{
-			id: "unique1event",
+			id: 0,
 			title: "Website Re-Design Plan",
 			startDate: new Date(2020, 4, 22, 9, 30),
 			endDate: new Date(2020, 4, 22, 11, 30),
 			allDay: false
 		},
 		{
-			id: "unique2event",
+			id: 1,
 			title: "Book flights to san fran for sales trip",
 			startDate: new Date(2020, 4, 22, 12, 0),
 			endDate: new Date(2020, 4, 22, 13, 0),
 			allDay: true
 		},
 		{
-			id: "unique3event",
+			id: 2,
 			title: "Install new router in dev room",
 			startDate: new Date(2020, 4, 22, 14, 30),
 			endDate: new Date(2020, 4, 22, 15, 30),
