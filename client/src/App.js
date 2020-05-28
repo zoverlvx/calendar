@@ -22,16 +22,8 @@ import {
 } from "@devexpress/dx-react-scheduler-material-ui";
 
 export default function(props) {
-	/*
-	const [state, setState] = useState({
-		data: [],
-		currentViewName: "work-week"
-	});
-	*/
 	const [events, setEvents] = useState([]);
-	const [viewName, setViewName] = useState("work-week")
-
-	console.log("events before request: ", events);
+	const [viewName, setViewName] = useState("work-week");
 
 	useEffect(function() {
 
@@ -42,48 +34,47 @@ export default function(props) {
 
 		fetchData();
 	}, []);
-	
-	console.log("events after request: ", events);
 
 	function currentViewNameChange(currentViewName) {
 		setViewName(currentViewName);
 	}
 
-	/*	
 	function commitChanges({ added, changed, deleted }) {
-		setState(function(state) {
-			const {data} = state;
-			let newData;
+		setEvents(function(state) {
 			if (added) {
-				// axios.post("/postingendpoint", added)
-				//   .then(response => console.log(response))
-				//   .catch(error => alert(error))
-				console.log("here is added: ",added);
-				newData = [...data, {...added}];
-				// id is handled on the backend and will return the new object
+				
+				added.id = state.length + 1;
+				console.log("here is added: ", added);
+				return [...state, added];
+			
 			} else if (changed) {
-				newData = data.map(function(appointment) {
+				
+				return state.map(function(appointment) {
 					return changed[appointment.id] 
 						? {...appointment, ...changed[appointment.id]}
 						: appointment;
 				});
-				console.log("here is the new data after change: ", newData);
-				console.log("here is changed: ", changed);
 
 			} else if (deleted !== undefined) {
-				newData = data.filter(function(appointment) {
+				/*
+				const id = await axios.delete(`/api/events/${deleted}`)
+				if (id) {
+					return state.filter(function(appointment) {
+						return appointment.id !== deleted;
+					})
+				} else {
+					alert("Not able to delete appointment.")
+				}
+				*/
+				console.log("here is the deleted key value: ", deleted);
+				return state.filter(function(appointment) {
 					return appointment.id !== deleted;
 				});
-				console.log("here is deleted: ", deleted);
 			}
-			return {...state, data: newData};
-		})
+			return state;
+		});
 	}
-	*/
-	function commitChanges() {
-		alert("hello");
-	}
-
+	
 	const today = new Date();
 
 	if (events.length === 0) return <div>Loading...</div>;
@@ -114,7 +105,10 @@ export default function(props) {
 					endDayHour={17}
 				/>
 				<MonthView />
-				<DayView />
+				<DayView 
+					startDayHour={8}
+					endDayHour={17}
+				/>
 				<ConfirmationDialog />
 				<Toolbar />
 				<DateNavigator />
