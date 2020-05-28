@@ -7,9 +7,9 @@ exports.up = function(knex) {
 				.primary();
 			event.string("title")
 				.notNullable();
-			event.string("startDate")
+			event.float("startDate")
 				.notNullable();
-			event.string("endDate")
+			event.float("endDate")
 				.notNullable();
 			event.boolean("allDay")
 				.notNullable()
