@@ -45,6 +45,12 @@ export default function(props) {
 	function commitChanges({ added, changed, deleted }) {
 		setEvents(function(state) {
 			if (added) {
+				
+				console.log(
+					"here is added from client: ", 
+					added
+				);
+
 				axios.post("/api/events", added);
 				return [...state, added];
 			

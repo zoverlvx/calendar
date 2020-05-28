@@ -17,8 +17,13 @@ module.exports = function (table) {
 	// adds item to database
 	// item: object
 	async function add(item) {
-		await db(table).insert(item, "id");
-		return await db(table).select("*").where("id", item.id);
+		//await db(table).insert(item, "id");
+		//return await db(table).select("*").where("id", item.id);
+		const id = await db(table).insert(item);
+		console.log("id of new event: ", id);
+		const value = await db(table).where({id}).first();
+		console.log("value from insert: ", value);
+		return value;
 	}
 
 	// finds all instances of item by property of item
