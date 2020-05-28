@@ -23,10 +23,12 @@ import {
 
 export default function(props) {
 	const [events, setEvents] = useState([]);
+	
+	// sets default view to work week
 	const [viewName, setViewName] = useState("work-week");
 
 	useEffect(function() {
-
+		// gets appointments from database
 		async function fetchData() {
 			const results = await axios.get("/api/events");
 			setEvents(results.data);
@@ -35,6 +37,7 @@ export default function(props) {
 		fetchData();
 	}, []);
 
+	// changes view of calendar
 	function currentViewNameChange(currentViewName) {
 		setViewName(currentViewName);
 	}
@@ -42,9 +45,7 @@ export default function(props) {
 	function commitChanges({ added, changed, deleted }) {
 		setEvents(function(state) {
 			if (added) {
-				
-				added.id = state.length + 1;
-				console.log("here is added: ", added);
+				axios.post("/api/events", added);
 				return [...state, added];
 			
 			} else if (changed) {
