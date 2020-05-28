@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 
-const whitelist = ["http://localhost:3000"];
+const whitelist = ["localhost:3000"];
 
 module.exports = function(server) {
 	server.use(function(req, res, next) {
@@ -13,6 +13,7 @@ module.exports = function(server) {
 		);
 		next();
 	});
+	/*
 	server.use(cors({
 		origin: function(origin, cb) {
 			// allow requests with no origin.
@@ -26,6 +27,7 @@ module.exports = function(server) {
 			return cb(null, true);
 		}
 	}));
+	*/
 	server.use(helmet());
 	server.use(express.json());
 	server.use(express.urlencoded({extended: false}));

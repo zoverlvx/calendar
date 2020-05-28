@@ -21,32 +21,35 @@ import {
 	ConfirmationDialog
 } from "@devexpress/dx-react-scheduler-material-ui";
 
-const HOST = "localhost";
-const PORT = 5000;
-const BASE_URL = `${HOST}:${PORT}/api/events`;
-
-const instance = axios.create({
-	baseURL: BASE_URL,
-	timeout: 2000,
-	headers: {"Content-Type": "application/json"}
-});
-
 export default function(props) {
+	/*
 	const [state, setState] = useState({
 		data: [],
 		currentViewName: "work-week"
 	});
-	console.log("state before request: ", state);
+	*/
+	const [events, setEvents] = useState([]);
+	const [viewName, setViewName] = useState("work-week")
+
+	console.log("events before request: ", events);
+
 	useEffect(function() {
-		instance.get("/")
-			.then(res => setState({...state, data: res.data}))
-			.catch(error => console.log(error));
-	});	
-	console.log("state after request: ", state);
-	function currentViewNameChange(currentViewName) {
-		setState({...state, currentViewName});
-	}
+
+		async function fetchData() {
+			const results = await axios.get("/api/events");
+			setEvents(results.data);
+		}
+
+		fetchData();
+	}, []);
 	
+	console.log("events after request: ", events);
+
+	function currentViewNameChange(currentViewName) {
+		setViewName(currentViewName);
+	}
+
+	/*	
 	function commitChanges({ added, changed, deleted }) {
 		setState(function(state) {
 			const {data} = state;
@@ -76,19 +79,24 @@ export default function(props) {
 			return {...state, data: newData};
 		})
 	}
+	*/
+	function commitChanges() {
+		alert("hello");
+	}
+
 	const today = new Date();
+
+	if (events.length === 0) return <div>Loading...</div>;
 
 	return (
 		<Paper>
 			<Scheduler
-				data={state.data}
+				data={events}
 				height={660}
 			>
 				<ViewState 
 					defaultCurrentDate={today}
-					currentViewName={
-						state.currentViewName
-					}
+					currentViewName={viewName}
 					onCurrentViewNameChange={
 						currentViewNameChange
 					}
