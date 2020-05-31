@@ -24,15 +24,19 @@ module.exports = function(req, res) {
 			endDate,
 			allDay,
 		};
+		
 		// adds event to database
-
 		Events.add(packet)
 			.then(newEvent => {
+				console.log(
+					"after it's been added to the db: ", 
+					newEvent
+				);
 				res.status(201).json(newEvent)
 			})
 			.catch(error => res.status(500).json(error));
 
 	} else {
-		res.status(500).json({"message": "Unable to add event."})
+		res.status(500).json({"message": "Unable to add event."});
 	}
 }
