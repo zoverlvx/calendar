@@ -10,20 +10,16 @@ module.exports = function (table) {
 
 	// finds item by id
 	// id: number
-	function findById(id) {
-		return db(table).where({id}).first(); // object
+	async function findById(id) {
+		return await db(table).where({id}).first(); // object
 	}
 
 	// adds item to database
 	// item: object
 	async function add(item) {
-		//await db(table).insert(item, "id");
-		//return await db(table).select("*").where("id", item.id);
-		const id = await db(table).insert(item);
-		console.log("id of new event: ", id);
-		const value = await db(table).where({id}).first();
-		console.log("value from insert: ", value);
-		return value;
+		const [id] = await db(table).insert(item);
+		const value = await findById(id);
+		return value; // object with the newly created item with id (number)
 	}
 
 	// finds all instances of item by property of item

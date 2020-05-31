@@ -1,6 +1,6 @@
 const Events = require("../../models")("events");
 
-module.exports = async function(req, res) {
+module.exports = function(req, res) {
 	const title = 
 		typeof(req.body.title) === "string" && req.body.title.trim().length > 0
 		? req.body.title.trim()
@@ -24,18 +24,13 @@ module.exports = async function(req, res) {
 			endDate,
 			allDay,
 		};
-		console.log("packet submitted: ", packet);
-		
-		const value = await Events.add(packet);
-		console.log("value in post endpoint: ", value);
+		// adds event to database
 
-			/*
+		Events.add(packet)
 			.then(newEvent => {
-				console.log("success: ", newEvent)
 				res.status(201).json(newEvent)
 			})
 			.catch(error => res.status(500).json(error));
-			*/
 
 	} else {
 		res.status(500).json({"message": "Unable to add event."})
