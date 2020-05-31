@@ -22,6 +22,10 @@ module.exports = function (table) {
 		return value; // object with the newly created item with id (number)
 	}
 
+	function remove(id) {
+		return db(table).where({id}).del();
+	}
+
 	// finds all instances of item by property of item
 	// property: object
 	function findAllBy(property) {
@@ -32,6 +36,7 @@ module.exports = function (table) {
 		find,
 		findById,
 		add,
-		findAllBy
+		findAllBy,
+		remove
 	};
 }

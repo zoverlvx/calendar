@@ -42,20 +42,37 @@ export default function(props) {
 		setViewName(currentViewName);
 	}
 
-	function commitChanges({ added, changed, deleted }) {
-		setEvents(function(state) {
-			if (added) {
-				
-				console.log(
-					"here is added from client: ", 
-					added
-				);
+	function commitChanges({ 
+		added, 
+		changed, 
+		deleted 
+	}) {
+		if (added) {
+			axios.post("/api/events", added)
+				.then(response => setEvents([...events, response.data]))
+				.catch(error => console.log(error));
 
-				axios.post("/api/events", added);
-				return [...state, added];
-			
+		} else if (changed) {
+			console.log("changed");
+		} else if (deleted) {
+			const deletedId = deleted;
+			axios.delete(`/api/events/${deletedId}`)
+				.then(function(response) {
+					if(response.data.id) {
+						setEvents(function(state) {
+							return state.filter(function(appointment) {
+								return appointment.id !== deletedId
+							})
+						})
+					}
+				})
+				.catch(error => console.log(error));
+		}
+		/*setEvents(async function(state) {
+			if (added) {
+				const response = await axios.post("/api/events", added);
+				return [...state, response.data];
 			} else if (changed) {
-				
 				return state.map(function(appointment) {
 					return changed[appointment.id] 
 						? {...appointment, ...changed[appointment.id]}
@@ -63,23 +80,17 @@ export default function(props) {
 				});
 
 			} else if (deleted !== undefined) {
-				/*
-				const id = await axios.delete(`/api/events/${deleted}`)
-				if (id) {
-					return state.filter(function(appointment) {
-						return appointment.id !== deleted;
-					})
-				} else {
-					alert("Not able to delete appointment.")
-				}
-				*/
-				console.log("here is the deleted key value: ", deleted);
-				return state.filter(function(appointment) {
-					return appointment.id !== deleted;
-				});
+				axios.delete(`/api/events/${deleted}`)
+					.then(function(res) {
+						console.log("res.data.id: ", res.data.id);
+						return state.filter(function(appointment) {
+							return appointment.id !== res.data.id
+						})
+					}).catch(error => console.log(error))
+
 			}
 			return state;
-		});
+		});*/
 	}
 	
 	const today = new Date();
