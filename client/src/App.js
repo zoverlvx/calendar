@@ -48,17 +48,48 @@ export default function(props) {
 		deleted 
 	}) {
 		if (added) {
+			// added is an object of the data to post to the db
 			axios.post("/api/events", added)
-				.then(response => setEvents([...events, response.data]))
+				.then(response => setEvents(function(state) {
+					return [...state, response.data];
+				}))
 				.catch(error => console.log(error));
 
 		} else if (changed) {
-			console.log("changed");
+			// changed is an object with a property named after the id
+			// of the updated event. With the corresponding property of the 
+			// changed item
+			// e.g. changed: {12: {title: "I changed this"}}
+
+			
+			const id = Number(Object.keys(changed)[0]);
+			
+			const changes = changed[id];
+			
+			axios.put(`/api/events/${id}`, {changes})
+				.then(function(response) {
+					setEvents(function(state) {
+						return state.map(function(event) {
+							if (event.id === id) {
+								return {...response.data};
+							}
+							return event;
+						})
+					})
+				})
+				.catch(error => console.log(error));
+
 		} else if (deleted) {
+			// deleted is the id of the event to be deleted
+			// it's type number
+
 			const deletedId = deleted;
 			axios.delete(`/api/events/${deletedId}`)
 				.then(function(response) {
-					if(response.data.id) {
+					
+					const {isDeleted} = response.data;
+
+					if(isDeleted) {
 						setEvents(function(state) {
 							return state.filter(function(appointment) {
 								return appointment.id !== deletedId
@@ -68,29 +99,6 @@ export default function(props) {
 				})
 				.catch(error => console.log(error));
 		}
-		/*setEvents(async function(state) {
-			if (added) {
-				const response = await axios.post("/api/events", added);
-				return [...state, response.data];
-			} else if (changed) {
-				return state.map(function(appointment) {
-					return changed[appointment.id] 
-						? {...appointment, ...changed[appointment.id]}
-						: appointment;
-				});
-
-			} else if (deleted !== undefined) {
-				axios.delete(`/api/events/${deleted}`)
-					.then(function(res) {
-						console.log("res.data.id: ", res.data.id);
-						return state.filter(function(appointment) {
-							return appointment.id !== res.data.id
-						})
-					}).catch(error => console.log(error))
-
-			}
-			return state;
-		});*/
 	}
 	
 	const today = new Date();
