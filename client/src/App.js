@@ -4,7 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import { 
 	ViewState,
 	EditingState,
-	IntegratedEditing
+	IntegratedEditing,
 } from "@devexpress/dx-react-scheduler";
 import {
 	Scheduler,
@@ -18,7 +18,9 @@ import {
 	ViewSwitcher,
 	AppointmentTooltip,
 	AppointmentForm,
-	ConfirmationDialog
+	ConfirmationDialog,
+	DragDropProvider,
+	EditRecurrenceMenu
 } from "@devexpress/dx-react-scheduler-material-ui";
 
 export default function(props) {
@@ -103,6 +105,7 @@ export default function(props) {
 	
 	const today = new Date();
 
+	// if events haven't come in from the server yet
 	if (events.length === 0) return <div>Loading...</div>;
 
 	return (
@@ -121,6 +124,7 @@ export default function(props) {
 				<EditingState 
 					onCommitChanges={commitChanges}
 				/>
+				<EditRecurrenceMenu />
 				<IntegratedEditing />
 
 				<WeekView 
@@ -141,6 +145,9 @@ export default function(props) {
 				<TodayButton />
 				<ViewSwitcher />
 				<Appointments />
+				<DragDropProvider 
+					allowDrag={() => true}
+				/>
 				<AppointmentTooltip 
 					showCloseButton
 					showOpenButton
