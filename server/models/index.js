@@ -26,6 +26,16 @@ module.exports = function (table) {
 		return db(table).where({id}).del();
 	}
 
+	async function update(id, changes) {
+		await db(table)
+			.where({id})
+			.update(changes, "*");
+		
+		const updatedEvent = await findById(id);
+		
+		return updatedEvent;
+	}
+
 	// finds all instances of item by property of item
 	// property: object
 	function findAllBy(property) {
@@ -37,6 +47,7 @@ module.exports = function (table) {
 		findById,
 		add,
 		findAllBy,
-		remove
+		remove,
+		update
 	};
 }

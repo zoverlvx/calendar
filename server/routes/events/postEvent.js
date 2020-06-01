@@ -28,10 +28,6 @@ module.exports = function(req, res) {
 		// adds event to database
 		Events.add(packet)
 			.then(newEvent => {
-				console.log(
-					"after it's been added to the db: ", 
-					newEvent
-				);
 				res.status(201).json(newEvent)
 			})
 			.catch(error => res.status(500).json(error));
